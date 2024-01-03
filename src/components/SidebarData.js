@@ -49,7 +49,7 @@ export default function GetSidebarData() {
       ],
     },
     {
-      title: "Subiecte",
+      title: "Materii",
       path: "/subjects",
       icon: <AiIcons.AiFillHome />,
       iconClosed: <RiIcons.RiArrowDownSFill />,

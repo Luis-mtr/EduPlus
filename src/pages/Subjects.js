@@ -109,7 +109,7 @@ const Subjects = () => {
         <thead>
           <tr>
             <StyledTableHeader colSpan="5">
-              <h1>Tabel de Subiecte</h1>
+              <h1>Tabel de Materii</h1>
             </StyledTableHeader>
           </tr>
           <tr>

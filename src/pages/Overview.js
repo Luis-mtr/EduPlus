@@ -24,7 +24,7 @@ const Overview = () => {
         Puteți adăuga Întrebări în secțiunea{" "}
         <Link to={{ pathname: `/AllQuestions` }}>'Toate Întrebările'</Link> și
         le puteți încadra în{" "}
-        <Link to={{ pathname: `/Subjects` }}>Subiectele</Link> definite
+        <Link to={{ pathname: `/Subjects` }}>Materiile</Link> definite
       </p>
     </div>
   );
