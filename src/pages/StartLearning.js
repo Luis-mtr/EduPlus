@@ -18,6 +18,8 @@ const StartLearning = () => {
   const questionsCollectionRef = collection(db, "questions");
   let question = "";
   let answers = [];
+  let rightAnswer = "";
+  let questionId = "";
 
   useEffect(() => {
     const getQuestions = async () => {
@@ -54,13 +56,22 @@ const StartLearning = () => {
       });
 
     question = questionsToLearn[questionIndex].q;
+    rightAnswer = questionsToLearn[questionIndex].a;
+    questionId = questionsToLearn[questionIndex].id;
     answers = [...wrongAnswers, questionsToLearn[questionIndex].a]
       .map((value) => ({ value, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
       .map(({ value }) => value);
   }
 
-  return <QuestionComponent question={question} answers={answers} />;
+  return (
+    <QuestionComponent
+      question={question}
+      answers={answers}
+      rightAnswer={rightAnswer}
+      questionId={questionId}
+    />
+  );
 };
 
 export default StartLearning;
