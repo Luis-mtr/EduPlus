@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Overview from "./pages/Overview";
 import Subjects from "./pages/Subjects";
 import DefaultSubject from "./pages/DefaultSubject";
-import { ReportsOne } from "./pages/ReportsOne";
 import { useState } from "react";
 import AllQuestions from "./pages/AllQuestions";
 import StartLearning from "./pages/StartLearning";

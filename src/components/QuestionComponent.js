@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  query,
-  orderBy,
-} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../firebase-config";
 
 const QuestionContainer = styled.div`
