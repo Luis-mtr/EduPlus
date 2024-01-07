@@ -1,6 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import { db } from "../firebase-config";
 
 const QuestionContainer = styled.div`
   background-color: #f4f4f4;
@@ -67,19 +78,88 @@ const StyledEdit = styled.button`
   margin-right: 10px;
 `;
 
-const QuestionComponent = ({ question, answers, rightAnswer, questionId }) => {
+const QuestionComponent = ({
+  question,
+  answers,
+  rightAnswer,
+  questionId,
+  countAsked,
+  countRight,
+  showAAskQ,
+  showQAskA,
+  avoidedQuestions,
+  setAvoidedQuestions,
+}) => {
   const [activeAnswer, setActiveAnswer] = useState([]);
+  const [isCorrect, setIsCorrect] = useState("");
   const navigate = useNavigate();
 
-  const reset = () => {
+  const confirm = () => {
+    if (activeAnswer[1] === rightAnswer) {
+      setIsCorrect("Correct");
+    } else {
+      setIsCorrect("Incorrect");
+    }
+  };
+
+  const nextQuestionCorrect = async (id) => {
+    const questionDoc = doc(db, "questions", id);
+    const newField = {
+      countAsked: countAsked + 1,
+      countRight: countRight + 1,
+      showAAskQ: showAAskQ / 2 + 50,
+      showQAskA: showQAskA / 2 + 50,
+    };
+    await updateDoc(questionDoc, newField);
+
+    setAvoidedQuestions([...avoidedQuestions, question].slice(-4));
+    setIsCorrect("");
+    setActiveAnswer([]);
     navigate("/StartLearning");
   };
 
-  const edit = () => {
-    navigate("/EditQuestions/" + questionId);
+  const nextQuestionIncorrect = async (id) => {
+    const questionDoc = doc(db, "questions", id);
+    const newField = {
+      countAsked: countAsked + 1,
+
+      showAAskQ: showAAskQ / 2,
+      showQAskA: showQAskA / 2,
+    };
+    await updateDoc(questionDoc, newField);
+
+    setAvoidedQuestions([...avoidedQuestions, question].slice(-4));
+    setIsCorrect("");
+    setActiveAnswer([]);
+    navigate("/StartLearning");
   };
 
-  return (
+  const reset = () => {
+    navigate("/StartLearning");
+    setIsCorrect("");
+    setActiveAnswer([]);
+  };
+
+  const edit = () => {
+    navigate("/EditQuestion/" + questionId);
+  };
+
+  return isCorrect === "Correct" ? (
+    <div>
+      <h1>Corect!</h1>
+      <StyledSkip onClick={() => nextQuestionCorrect(questionId)}>
+        Continuă
+      </StyledSkip>
+    </div>
+  ) : isCorrect === "Incorrect" ? (
+    <div>
+      <h1>Greșit!!</h1>
+      <h2>Raspunsul corect era {rightAnswer}</h2>
+      <StyledSkip onClick={() => nextQuestionIncorrect(questionId)}>
+        Continuă
+      </StyledSkip>
+    </div>
+  ) : (
     <div>
       <QuestionContainer>
         <QuestionText>{question}</QuestionText>
@@ -95,7 +175,7 @@ const QuestionComponent = ({ question, answers, rightAnswer, questionId }) => {
           </div>
         ))}
       </QuestionContainer>
-      <StyledSubmit>Confirmă răspuns</StyledSubmit>
+      <StyledSubmit onClick={confirm}>Confirmă răspuns</StyledSubmit>
       <StyledSkip onClick={reset}>Altă întrebare</StyledSkip>
       <StyledEdit onClick={edit}>Modifică întrebarea</StyledEdit>
     </div>

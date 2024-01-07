@@ -9,6 +9,8 @@ import { useState } from "react";
 import AllQuestions from "./pages/AllQuestions";
 import StartLearning from "./pages/StartLearning";
 import Statistics from "./pages/Statistics";
+import EditQueestion from "./pages/EditQuestion";
+//import Overview from "./pages/Overview";
 
 function App() {
   const [sidebar, setSidebar] = useState(false);
@@ -24,6 +26,7 @@ function App() {
           }
         >
           <Routes>
+            <Route path="/" exact Component={Overview} />
             <Route path="/overview" exact Component={Overview} />
             <Route path="/subjects" exact Component={Subjects} />
             <Route
@@ -32,7 +35,14 @@ function App() {
             />
             <Route path="/StartLearning" Component={StartLearning} />
             <Route path="/Statistics" Component={Statistics} />
-            <Route path="/AllQuestions" exact Component={AllQuestions} />
+            <Route
+              path="/AllQuestions/:ParamSubject?"
+              Component={AllQuestions}
+            />
+            <Route
+              path="/EditQuestion/:QuestionId?"
+              Component={EditQueestion}
+            />
             {/* <Route path="/reportsthree" exact Component={ReportsThree} /> */}
           </Routes>
         </div>

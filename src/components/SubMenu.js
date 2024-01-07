@@ -70,7 +70,7 @@ const SubMenu = ({ item }) => {
                     ? "/StartLearning"
                     : item.subjectName === "Statistici"
                     ? "/Statistics"
-                    : "/DefaultSubject/" + item.subjectName
+                    : "/AllQuestions/" + item.subjectName
                 }`,
               }}
               key={index}

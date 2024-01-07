@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-//import styled from "styled-components";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
-import { useParams } from "react-router-dom";
 import QuestionComponent from "../components/QuestionComponent";
 
 const StartLearning = () => {
   const [questions, setQuestions] = useState([]);
+  const [avoidedQuestions, setAvoidedQuestions] = useState([]);
   const questionsCollectionRef = collection(db, "questions");
   let question = "";
   let answers = [];
   let rightAnswer = "";
   let questionId = "";
+  let showQAskA,
+    countAsked,
+    countRight,
+    showAAskQ = 0;
 
   useEffect(() => {
     const getQuestions = async () => {
@@ -32,6 +27,7 @@ const StartLearning = () => {
 
   if (questions.length > 0) {
     const sortedQuestions = questions
+      .filter((obj) => !avoidedQuestions.includes(obj.q))
       .slice()
       .sort((a, b) => a.showQAskA - b.showQAskA);
 
@@ -42,10 +38,9 @@ const StartLearning = () => {
     console.log(questionSliceIndex);
 
     const questionsToLearn = sortedQuestions.slice(0, questionSliceIndex);
-
     console.log(questionsToLearn);
 
-    const questionIndex = Math.floor(Math.random() * questionSliceIndex);
+    const questionIndex = Math.floor(Math.random() * questionsToLearn.length);
 
     console.log(questionIndex);
 
@@ -54,6 +49,11 @@ const StartLearning = () => {
       .map(function (item) {
         return item.trim();
       });
+
+    showQAskA = questionsToLearn[questionIndex].showQAskA;
+    countAsked = questionsToLearn[questionIndex].countAsked;
+    countRight = questionsToLearn[questionIndex].countRight;
+    showAAskQ = questionsToLearn[questionIndex].showAAskQ;
 
     question = questionsToLearn[questionIndex].q;
     rightAnswer = questionsToLearn[questionIndex].a;
@@ -70,6 +70,12 @@ const StartLearning = () => {
       answers={answers}
       rightAnswer={rightAnswer}
       questionId={questionId}
+      showQAskA={showQAskA}
+      countAsked={countAsked}
+      countRight={countRight}
+      showAAskQ={showAAskQ}
+      avoidedQuestions={avoidedQuestions}
+      setAvoidedQuestions={setAvoidedQuestions}
     />
   );
 };

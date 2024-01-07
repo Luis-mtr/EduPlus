@@ -8,10 +8,10 @@ import {
   deleteDoc,
   doc,
   query,
-  orderBy,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase-config";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const StyledTablePage = styled.div`
   //display: flex;
@@ -54,28 +54,52 @@ const StyledButton = styled.button`
   cursor: pointer;
 `;
 
-const DefaultSubject = () => {
+const FlexibleTextarea = styled.textarea`
+  flex: 1; // This makes the textarea flexibly grow to fill available space
+  min-height: 1px; // Set a minimum height to prevent it from collapsing to zero
+  resize: none; // Prevent users from manually resizing the textarea
+  border: 1px solid black;
+  padding: 8px;
+`;
+
+const AllQuestions = () => {
   const [questions, setQuestions] = useState([]);
   const questionsCollectionRef = collection(db, "questions");
   const [order, setOrder] = useState("ascIntr");
-  // const { subject } = useParams();
+  const { ParamSubject } = useParams();
+
+  console.log(ParamSubject);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getQuestions = async () => {
-      let q = null;
-      if (order === "ascIntr") {
-        q = query(questionsCollectionRef, orderBy("q", "asc"));
+      if (ParamSubject) {
+        const q = query(
+          questionsCollectionRef,
+          where("subject", "==", ParamSubject)
+        );
+        const data = await getDocs(q);
+        const questions = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setQuestions(questions);
+      } else {
+        const data = await getDocs(questionsCollectionRef);
+        setQuestions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       }
-      if (order === "descIntr") {
-        q = query(questionsCollectionRef, orderBy("q", "desc"));
-      }
-
-      const data = await getDocs(q);
-      setQuestions(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
 
     getQuestions();
-  }, []);
+  }, [ParamSubject]);
+
+  // if (questions && ParamSubject) {
+  //   const pageQuestions = questions.filter(
+  //     (obj) => obj.subject === ParamSubject
+  //   );
+  //   setQuestions(pageQuestions);
+  // }
 
   const [newQ, setNewQ] = useState("");
   const [newA, setNewA] = useState("");
@@ -115,7 +139,7 @@ const DefaultSubject = () => {
     await updateDoc(questionDoc, newField);
     window.location.reload();
   };
-
+  // SGODt26cjttcr2BxrDvw ECXjm6C5d4gouiF7gZm6 YbJJS3EjaW4pfLkuvLxO
   const [subjects, setSubjects] = useState([]);
   const subjectsCollectionRef = collection(db, "subjects");
 
@@ -177,7 +201,7 @@ const DefaultSubject = () => {
       <StyledTable>
         <thead>
           <tr>
-            <StyledTableHeader colSpan="10">
+            <StyledTableHeader colSpan="11">
               <h1>Toate Întrebările</h1>
             </StyledTableHeader>
           </tr>
@@ -222,6 +246,7 @@ const DefaultSubject = () => {
             </StyledTableHeader>
             <StyledTableHeader>Del.</StyledTableHeader>
             <StyledTableHeader>Reset</StyledTableHeader>
+            <StyledTableHeader>Edit</StyledTableHeader>
           </tr>
         </thead>
         <tbody>
@@ -231,7 +256,7 @@ const DefaultSubject = () => {
             </StyledButton>
           </StyledTableCell>
           <StyledTableCell>
-            <input
+            <FlexibleTextarea
               type="text"
               placeholder="Întrebare nouă..."
               id=""
@@ -241,7 +266,7 @@ const DefaultSubject = () => {
             />
           </StyledTableCell>
           <StyledTableCell>
-            <input
+            <FlexibleTextarea
               type="text"
               placeholder="Răspuns..."
               id=""
@@ -256,13 +281,15 @@ const DefaultSubject = () => {
               onChange={(e) => setNewSubject(e.target.value)}
             >
               {subjects.map((row) => (
-                <option value={row.subjectName}>{row.subjectName}</option>
+                <option value={row.subjectName} key={row.id}>
+                  {row.subjectName}
+                </option>
               ))}
             </select>
           </StyledTableCell>
           <StyledTableCell>50%</StyledTableCell>
           <StyledTableCell>
-            <input
+            <FlexibleTextarea
               type="text"
               placeholder="Variante..."
               id=""
@@ -277,7 +304,10 @@ const DefaultSubject = () => {
             <button>❌</button>
           </StyledTableCell>
           <StyledTableCell>
-            <button>✒</button>
+            <button>Reset ✒</button>
+          </StyledTableCell>
+          <StyledTableCell>
+            <button>Edit ✒</button>
           </StyledTableCell>
           {sortedQuestions.map((row) => (
             <tr key={row.id}>
@@ -288,7 +318,7 @@ const DefaultSubject = () => {
               <StyledTableCell>{row.a}</StyledTableCell>
               <StyledTableCell>{row.subject}</StyledTableCell>
               <StyledTableCell>
-                {Math.round((row.showAAskQ + row.showQAskA) / 2) + "%"}
+                {Math.floor((row.showAAskQ + row.showQAskA) / 2) + "%"}
               </StyledTableCell>
               <StyledTableCell>{row.wrongA}</StyledTableCell>
               <StyledTableCell>{row.countAsked}</StyledTableCell>
@@ -319,14 +349,28 @@ const DefaultSubject = () => {
                 <button
                   onClick={() => {
                     const userConfirmed = window.confirm(
-                      "Ești sigur că vrei să resetezi întrebarea?"
+                      "Ești sigur că vrei să RESETEZI întrebarea?"
                     );
                     if (userConfirmed) {
                       questionReset(row.id);
                     }
                   }}
                 >
-                  ✒
+                  Reset ✒
+                </button>
+              </StyledTableCell>
+              <StyledTableCell>
+                <button
+                  onClick={() => {
+                    const userConfirmed = window.confirm(
+                      "Ești sigur că vrei să EDITEZI întrebarea?"
+                    );
+                    if (userConfirmed) {
+                      navigate(`/EditQuestion/${row.id}`);
+                    }
+                  }}
+                >
+                  Edit ✒
                 </button>
               </StyledTableCell>
             </tr>
@@ -337,4 +381,4 @@ const DefaultSubject = () => {
   );
 };
 
-export default DefaultSubject;
+export default AllQuestions;

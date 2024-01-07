@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase-config";
 import { useParams } from "react-router-dom";
 
@@ -85,7 +78,7 @@ const DefaultSubject = () => {
             <StyledTableHeader>Nivel de Cunoaștere</StyledTableHeader>
             <StyledTableHeader>Variante Greșite</StyledTableHeader>
             <StyledTableHeader>Răspunsuri date</StyledTableHeader>
-            <StyledTableHeader>Răspunsuri corect</StyledTableHeader>
+            <StyledTableHeader>Răspunsuri corecte</StyledTableHeader>
           </tr>
         </thead>
         <tbody>
@@ -97,7 +90,7 @@ const DefaultSubject = () => {
               <StyledTableCell>{row.q}</StyledTableCell>
               <StyledTableCell>{row.a}</StyledTableCell>
               <StyledTableCell>
-                {Math.round((row.showAAskQ + row.showQAskA) / 2) + "%"}
+                {Math.floor((row.showAAskQ + row.showQAskA) / 2) + "%"}
               </StyledTableCell>
               <StyledTableCell>{row.wrongA}</StyledTableCell>
               <StyledTableCell>{row.countAsked}</StyledTableCell>

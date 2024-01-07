@@ -136,7 +136,7 @@ const Subjects = () => {
               <StyledTableCell>
                 {questions.filter((obj) => obj.subject === row.subjectName)
                   .length > 0
-                  ? Math.round(
+                  ? Math.floor(
                       Number(
                         questions
                           .filter((obj) => obj.subject === row.subjectName)
@@ -163,11 +163,11 @@ const Subjects = () => {
 
                     if (subjectQuestions.length > 0) {
                       alert(
-                        "Acest subiect are întrebări. Ștergerea subiectului este posibilă doar după ștergerea acestor întrebări."
+                        "Acestă materie are întrebări. Ștergerea materiei este posibilă doar după ștergerea acestor întrebări."
                       );
                     } else {
                       const userConfirmed = window.confirm(
-                        "Ești sigur că vrei să ștergi subiectul?"
+                        "Ești sigur că vrei să ștergi materia?"
                       );
 
                       if (userConfirmed) {
@@ -186,7 +186,7 @@ const Subjects = () => {
             <StyledTableCell>
               <input
                 type="text"
-                placeholder="Subiect nou..."
+                placeholder="Materie nouă..."
                 id=""
                 onChange={(e) => {
                   setNewSubject(e.target.value);
