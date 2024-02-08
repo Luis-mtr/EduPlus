@@ -35,20 +35,36 @@ const StartLearning = () => {
       Math.random() * sortedQuestions.length + 1
     );
 
-    console.log(questionSliceIndex);
+    //console.log(questionSliceIndex);
 
     const questionsToLearn = sortedQuestions.slice(0, questionSliceIndex);
-    console.log(questionsToLearn);
+    //console.log(questionsToLearn);
 
     const questionIndex = Math.floor(Math.random() * questionsToLearn.length);
 
-    console.log(questionIndex);
+    //console.log(questionIndex);
 
-    const wrongAnswers = questionsToLearn[questionIndex].wrongA
-      .split(",")
-      .map(function (item) {
-        return item.trim();
-      });
+    const questionToLearnSubject = questionsToLearn[questionIndex].subject;
+    const otherQuestionsOfSubjectAsked = questions
+      .filter((obj) => obj.subject === questionToLearnSubject)
+      .filter((obj) => obj.q !== questionsToLearn[questionIndex].q);
+
+    let wrongAnswers = [];
+
+    if (otherQuestionsOfSubjectAsked.length > 3) {
+      wrongAnswers = otherQuestionsOfSubjectAsked
+        .map((obj) => obj.a)
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+        .slice(0, 4);
+    } else {
+      wrongAnswers = questionsToLearn[questionIndex].wrongA
+        .split(",")
+        .map(function (item) {
+          return item.trim();
+        });
+    }
 
     showQAskA = questionsToLearn[questionIndex].showQAskA;
     countAsked = questionsToLearn[questionIndex].countAsked;

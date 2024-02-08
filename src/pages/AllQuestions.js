@@ -182,14 +182,14 @@ const AllQuestions = () => {
       : order === "ascRC"
       ? questions.slice().sort((a, b) => {
           const percA = Number(a.countRight) / (Number(a.countAsked) + 0.01);
-          const percB = Number(b.countRight) + (Number(b.countAsked) + 0.01);
+          const percB = Number(b.countRight) / (Number(b.countAsked) + 0.01);
 
           return percA - percB;
         })
       : order === "descRC"
       ? questions.slice().sort((a, b) => {
           const percA = Number(a.countRight) / (Number(a.countAsked) + 0.01);
-          const percB = Number(b.countRight) + (Number(b.countAsked) + 0.01);
+          const percB = Number(b.countRight) / (Number(b.countAsked) + 0.01);
 
           return percB - percA;
         })
@@ -221,7 +221,7 @@ const AllQuestions = () => {
                 <button onClick={() => setOrder("descRsp")}>🔽</button>
               </div>
             </StyledTableHeader>
-            <StyledTableHeader>Subiect</StyledTableHeader>
+            <StyledTableHeader>Materie</StyledTableHeader>
             <StyledTableHeader>
               Nivel de Cunoaștere
               <div>

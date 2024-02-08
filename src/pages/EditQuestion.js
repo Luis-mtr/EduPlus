@@ -236,7 +236,7 @@ const EditQuestion = () => {
               defaultValue={countAsked}
               id=""
               onBlur={(e) => {
-                setcountAsked(e.target.value);
+                setcountAsked(Number(e.target.value));
               }}
             />
           </StyledTableCell>
@@ -250,7 +250,9 @@ const EditQuestion = () => {
               id=""
               onBlur={(e) => {
                 setcountRight(
-                  e.target.value <= countAsked ? e.target.value : countAsked
+                  e.target.value <= countAsked
+                    ? Number(e.target.value)
+                    : Number(countAsked)
                 );
               }}
             />

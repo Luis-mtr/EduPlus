@@ -34,16 +34,16 @@ const StyledTableHeader = styled.th`
   background-color: #f2f2f2;
 `;
 
-const StyledButton = styled.button`
-  margin-top: 10px;
-  align-self: flex-end;
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-`;
+// const StyledButton = styled.button`
+//   margin-top: 10px;
+//   align-self: flex-end;
+//   padding: 10px;
+//   background-color: #4caf50;
+//   color: white;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+// `;
 
 const DefaultSubject = () => {
   const [questions, setQuestions] = useState([]);
